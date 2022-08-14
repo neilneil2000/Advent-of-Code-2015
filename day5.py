@@ -1,4 +1,4 @@
-from day_5_input import input
+from day_5_input import day_5_input
 
 
 class StringChecker:
@@ -6,10 +6,20 @@ class StringChecker:
 
     VOWELS = {"a", "e", "i", "o", "u"}
     NAUGHTY_PAIRS = {"ab", "cd", "pq", "xy"}
+    NICE_RETURN = "Nice"
+    NAUGHTY_RETURN = "Naughty"
 
     def __init__(self):
         self.naughty_count = 0
         self.nice_count = 0
+
+    def _is_naughty(self):
+        self.naughty_count += 1
+        return self.NAUGHTY_RETURN
+
+    def _is_nice(self):
+        self.nice_count += 1
+        return self.NICE_RETURN
 
     def check_string(self, string_to_be_checked: str):
         """Given a string it will determine whether it is naughty or nice"""
@@ -19,8 +29,7 @@ class StringChecker:
         previous_letter = ""
         for letter in string_to_be_checked:
             if previous_letter + letter in self.NAUGHTY_PAIRS:
-                self.naughty_count += 1
-                return "Naughty"
+                return self._is_naughty()
             if previous_letter == letter:
                 double_letter_flag = True
             if letter in self.VOWELS:
@@ -28,10 +37,8 @@ class StringChecker:
             previous_letter = letter
 
         if double_letter_flag and vowel_count >= 3:
-            self.nice_count += 1
-            return "Nice"
-        self.naughty_count += 1
-        return "Naughty"
+            return self._is_nice()
+        return self._is_naughty()
 
     @property
     def total_checked(self):
@@ -42,7 +49,7 @@ class StringChecker:
 def main():
     """Main function"""
     santas_machine = StringChecker()
-    strings = input.splitlines()
+    strings = day_5_input.splitlines()
     for string in strings:
         santas_machine.check_string(string)
 

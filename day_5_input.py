@@ -1,4 +1,4 @@
-input = """sszojmmrrkwuftyv
+day_5_input = """sszojmmrrkwuftyv
 isaljhemltsdzlum
 fujcyucsrxgatisb
 qiqqlmcgnhzparyg
