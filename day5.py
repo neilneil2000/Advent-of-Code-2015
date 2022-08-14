@@ -1,6 +1,19 @@
 from day_5_input import day_5_input
 
 
+class Buffer:
+    def __init__(self, length: int):
+        self.buffer = ["" for _ in range(length)]
+
+    def add_item(self, item):
+        self.buffer.pop(0)
+        self.buffer.append(item)
+
+    @property
+    def pair(self):
+        return self.buffer[1] + self.buffer[2]
+
+
 class StringChecker:
     """Machine to check whether strings are naughty or nice"""
 
@@ -22,7 +35,7 @@ class StringChecker:
         return self.NICE_RETURN
 
     def check_string(self, string_to_be_checked: str):
-        """Given a string it will determine whether it is naughty or nice"""
+        """Given a string it will determine whether it is naughty or nice (Part 1)"""
 
         double_letter_flag = False
         vowel_count = 0
@@ -40,6 +53,28 @@ class StringChecker:
             return self._is_nice()
         return self._is_naughty()
 
+    def check_string_new_model(self, string_to_be_checked: str):
+        """Given a string it will determine whether it is naughty or nice (Part 2)"""
+        pairs = {}
+        letters = Buffer(3)
+        single_letter_repeat_flag = False
+        double_letter_repeat_flag = False
+
+        for position, letter in enumerate(string_to_be_checked):
+            letters.add_item(letter)
+            if letters.pair in pairs:
+                if position > pairs[letters.pair] + 1:
+                    double_letter_repeat_flag = True
+            else:
+                pairs[letters.pair] = position
+
+            if letters.buffer[0] == letters.buffer[2]:
+                single_letter_repeat_flag = True
+
+        if single_letter_repeat_flag and double_letter_repeat_flag:
+            return self._is_nice()
+        return self._is_naughty()
+
     @property
     def total_checked(self):
         """Total number of strings successfully checked"""
@@ -50,8 +85,9 @@ def main():
     """Main function"""
     santas_machine = StringChecker()
     strings = day_5_input.splitlines()
+    # strings = ["qjhvhtzxzqqjkmpb", "xxyxx", "uurcxstgmygtbstg", "ieodomkazucvgmuy"]
     for string in strings:
-        santas_machine.check_string(string)
+        santas_machine.check_string_new_model(string)
 
     print(f"{santas_machine.total_checked} Strings Checked")
     print(f"Naughty: {santas_machine.naughty_count}")
