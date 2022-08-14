@@ -22,6 +22,39 @@ class LightCommand:
     end_point: Point
     action: CommandAction = None
 
+class LightGridv2:
+    """Representation of a Grid of Lights"""
+
+    def __init__(self, size: Tuple[int, int]):
+        self.x, self.y = size
+        self.lights_on = {}
+
+    def switch_on_light(self, light_position:Point):
+        """Increase Light Brightness by 1"""
+        if light_position in self.lights_on:
+            self.lights_on[light_position]+=1
+        else:
+            self.lights_on[light_position]=1
+
+    def switch_off_light(self, light_position:Point):
+        """Switch off light at position light_position"""
+        if light_position not in self.lights_on:
+            return
+        self.lights_on[light_position] -= 1
+        if self.lights_on[light_position] <=0:
+            self.lights_on.pop(light_position)
+
+    def toggle_light(self, light_position:Point):
+        """Increase Light Brightness by 2"""
+        self.switch_on_light(light_position)
+        self.switch_on_light(light_position)
+
+    @property
+    def total_brightness(self):
+        """Return number of lights currently on"""
+        return sum(self.lights_on.values())
+
+
 
 class LightGrid:
     """Representation of a Grid of Lights"""
@@ -118,6 +151,11 @@ def main():
     for command in commands:
         my_light_controller.execute_command(command, my_lights)
     print(f"{my_lights.number_of_lights_on} lights on at end of sequence")
+
+    my_lights_v2 = LightGridv2((1000,1000))
+    for command in commands:
+        my_light_controller.execute_command(command, my_lights_v2)
+    print(f"{my_lights_v2.total_brightness} total brightness")
 
 
 if __name__ == "__main__":
