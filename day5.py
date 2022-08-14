@@ -1,16 +1,21 @@
+"""Solution to Advent of Code 2015 Day 5"""
 from day_5_input import day_5_input
 
 
-class Buffer:
+class Pipeline:
+    """Model of fixed length FIFO pipeline"""
+
     def __init__(self, length: int):
         self.buffer = ["" for _ in range(length)]
 
     def add_item(self, item):
-        self.buffer.pop(0)
+        """Add item to pipeline"""
         self.buffer.append(item)
+        return self.buffer.pop(0)
 
     @property
     def pair(self):
+        """Return Most recent 2 items"""
         return self.buffer[1] + self.buffer[2]
 
 
@@ -55,18 +60,19 @@ class StringChecker:
 
     def check_string_new_model(self, string_to_be_checked: str):
         """Given a string it will determine whether it is naughty or nice (Part 2)"""
-        pairs = {}
-        letters = Buffer(3)
+        pairs_found = {}
+        letters = Pipeline(3)
         single_letter_repeat_flag = False
         double_letter_repeat_flag = False
 
-        for position, letter in enumerate(string_to_be_checked):
+        for current_position, letter in enumerate(string_to_be_checked):
             letters.add_item(letter)
-            if letters.pair in pairs:
-                if position > pairs[letters.pair] + 1:
-                    double_letter_repeat_flag = True
-            else:
-                pairs[letters.pair] = position
+            if letters.pair not in pairs_found:
+                pairs_found[letters.pair] = current_position
+            elif (
+                current_position > pairs_found[letters.pair] + 1
+            ):  # +1 avoids overlapping case aaaa=OK aaa=NOT OK
+                double_letter_repeat_flag = True
 
             if letters.buffer[0] == letters.buffer[2]:
                 single_letter_repeat_flag = True
