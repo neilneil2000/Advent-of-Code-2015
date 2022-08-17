@@ -1,0 +1,27 @@
+import day_7_wires
+from day_7_input import puzzle_input
+
+
+def main():
+    """Main Function"""
+
+    my_circuit = day_7_wires.Circuit()
+    for instruction in puzzle_input.splitlines():
+        my_circuit.add_gate(instruction)
+
+    wire_name = "a"
+    wire_signal = my_circuit.get_wire_value(wire_name)
+    print(f"Wire {wire_name} has a value of: {wire_signal}")
+
+    my_second_circuit = day_7_wires.Circuit()
+    for instruction in puzzle_input.splitlines():
+        if instruction[-4:] == "-> b":
+            instruction = f"{wire_signal} -> b"
+        my_second_circuit.add_gate(instruction)
+
+    wire_signal = my_second_circuit.get_wire_value(wire_name)
+    print(f"Wire {wire_name} has a value of: {wire_signal}")
+
+
+if __name__ == "__main__":
+    main()
