@@ -1,5 +1,9 @@
 """Advent of Code 2015 Day 8"""
 
+ESCAPE_SLASH = 92
+LOWERCASE_X = 120
+DOUBLE_QUOTE = 34
+
 
 def read_file(filename: str):
     """Read input file"""
@@ -16,10 +20,6 @@ def real_length(byte_string: str) -> int:
     # Find \\
     # Find \"
     # Find \xXX
-
-    ESCAPE_SLASH = 92
-    LOWERCASE_X = 120
-    DOUBLE_QUOTE = 34
 
     possible_escape_char_found = False
     hex_char_counter = 0
@@ -44,16 +44,30 @@ def real_length(byte_string: str) -> int:
     return len(byte_string) - reduction_counter - 2
 
 
+def encoded_length(byte_string: str) -> int:
+    """Returns additional length of string literal re-encoded"""
+
+    increased_counter = 0
+    for letter in byte_string:
+        if letter in [ESCAPE_SLASH, DOUBLE_QUOTE]:
+            increased_counter += 1
+
+    return increased_counter + 2
+
+
 def main():
     """Main Function"""
     puzzle_input = read_file("day_8_input.txt")
 
-    total = 0
+    part_one_total = 0
+    part_two_total = 0
 
     for line in puzzle_input:
-        total += len(line) - real_length(line)
+        part_one_total += len(line) - real_length(line)
+        part_two_total += encoded_length(line)
 
-    print(total)
+    print(part_one_total)
+    print(part_two_total)
 
 
 if __name__ == "__main__":
