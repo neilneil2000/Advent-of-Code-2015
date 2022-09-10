@@ -1,5 +1,8 @@
 from dataclasses import dataclass, field
+from http.client import CONTINUE
+from lib2to3.pgen2.token import LESS
 from typing import List, Dict
+from unittest.result import failfast
 
 
 @dataclass
@@ -51,10 +54,33 @@ def main():
     sues = get_sues("day_16_input.txt")
 
     correct_sue = None
+
     for sue in sues:
         if all(item in gifting_sue.stuff.items() for item in sue.stuff.items()):
             correct_sue = sue
             break
+
+    print(correct_sue.number)
+
+    LESS_THANS = ["pomeranians", "goldfish"]
+    MORE_THANS = ["cats", "trees"]
+
+    fail_flag = False
+    for sue in sues:
+        fail_flag = False
+        for parameter in sue.stuff:
+            if parameter in LESS_THANS:
+                if sue.stuff[parameter] >= gifting_sue.stuff[parameter]:
+                    fail_flag = True
+            elif parameter in MORE_THANS:
+                if sue.stuff[parameter] <= gifting_sue.stuff[parameter]:
+                    fail_flag = True
+            else:
+                if sue.stuff[parameter] != gifting_sue.stuff[parameter]:
+                    fail_flag = True
+        if not fail_flag:
+            correct_sue = sue
+
     print(correct_sue.number)
 
 
